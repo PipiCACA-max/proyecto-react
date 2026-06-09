@@ -1,73 +1,97 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import "../Styles/AppointmentForm.css";
-import { ToastContainer, toast } from "react-toastify";
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import '../Styles/AppointmentForm.css'
+import { ToastContainer, toast } from 'react-toastify'
 
 function AppointmentForm() {
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 
-  const [patientName, setPatientName] = useState("");
-  const [patientNumber, setPatientNumber] = useState("");
-  const [patientGender, setPatientGender] = useState("default");
-  const [appointmentTime, setAppointmentTime] = useState("");
-  const [preferredMode, setPreferredMode] = useState("default");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formErrors, setFormErrors] = useState({});
+    // 🔍 LOG INVENTADO: Monitorea cuántas veces entran los usuarios a la página del formulario
+    console.log(
+      '📁 [LOG]: Pantalla del formulario cargada con éxito. Inicializando inputs vacíos.',
+    )
+  }, []) // Añadí el array vacío aquí para que solo corra una vez al montar el componente
+
+  const [patientName, setPatientName] = useState('')
+  const [patientNumber, setPatientNumber] = useState('')
+  const [patientGender, setPatientGender] = useState('default')
+  const [appointmentTime, setAppointmentTime] = useState('')
+  const [preferredMode, setPreferredMode] = useState('default')
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [formErrors, setFormErrors] = useState({})
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     // Validate form inputs
-    const errors = {};
+    const errors = {}
     if (!patientName.trim()) {
-      errors.patientName = "Patient name is required";
+      errors.patientName = 'Patient name is required'
     } else if (patientName.trim().length < 8) {
-      errors.patientName = "Patient name must be at least 8 characters";
+      errors.patientName = 'Patient name must be at least 8 characters'
     }
 
     if (!patientNumber.trim()) {
-      errors.patientNumber = "Patient phone number is required";
+      errors.patientNumber = 'Patient phone number is required'
     } else if (patientNumber.trim().length !== 10) {
-      errors.patientNumber = "Patient phone number must be of 10 digits";
+      errors.patientNumber = 'Patient phone number must be of 10 digits'
     }
 
-    if (patientGender === "default") {
-      errors.patientGender = "Please select patient gender";
+    if (patientGender === 'default') {
+      errors.patientGender = 'Please select patient gender'
     }
     if (!appointmentTime) {
-      errors.appointmentTime = "Appointment time is required";
+      errors.appointmentTime = 'Appointment time is required'
     } else {
-      const selectedTime = new Date(appointmentTime).getTime();
-      const currentTime = new Date().getTime();
+      const selectedTime = new Date(appointmentTime).getTime()
+      const currentTime = new Date().getTime()
       if (selectedTime <= currentTime) {
-        errors.appointmentTime = "Please select a future appointment time";
+        errors.appointmentTime = 'Please select a future appointment time'
       }
     }
-    if (preferredMode === "default") {
-      errors.preferredMode = "Please select preferred mode";
+    if (preferredMode === 'default') {
+      errors.preferredMode = 'Please select preferred mode'
     }
 
+    // Si hay errores de validación...
     if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
+      setFormErrors(errors)
+
+      // ❌ ERROR: Registra los detalles exactos de qué campos bloquearon el envío
+      console.error(
+        '❌ [ERROR]: Intento de envío rechazado. Errores de validación activos:',
+        errors,
+      )
+      return
     }
+
+    // 🟢 LOG: Si el formulario es totalmente válido y pasa el filtro
+    console.log(
+      '🟢 [LOG]: ¡Validación exitosa! Procesando los siguientes datos de cita:',
+      {
+        fullName: patientName,
+        phone: patientNumber,
+        gender: patientGender,
+        time: appointmentTime,
+        mode: preferredMode,
+      },
+    )
 
     // Reset form fields and errors after successful submission
-    setPatientName("");
-    setPatientNumber("");
-    setPatientGender("default");
-    setAppointmentTime("");
-    setPreferredMode("default");
-    setFormErrors({});
+    setPatientName('')
+    setPatientNumber('')
+    setPatientGender('default')
+    setAppointmentTime('')
+    setPreferredMode('default')
+    setFormErrors({})
 
-    toast.success("Appointment Scheduled !", {
+    toast.success('Appointment Scheduled !', {
       position: toast.POSITION.TOP_CENTER,
       onOpen: () => setIsSubmitted(true),
       onClose: () => setIsSubmitted(false),
-    });
-  };
+    })
+  }
 
   return (
     <div className="appointment-form-section">
@@ -91,7 +115,9 @@ function AppointmentForm() {
               onChange={(e) => setPatientName(e.target.value)}
               required
             />
-            {formErrors.patientName && <p className="error-message">{formErrors.patientName}</p>}
+            {formErrors.patientName && (
+              <p className="error-message">{formErrors.patientName}</p>
+            )}
           </label>
 
           <br />
@@ -103,7 +129,9 @@ function AppointmentForm() {
               onChange={(e) => setPatientNumber(e.target.value)}
               required
             />
-            {formErrors.patientNumber && <p className="error-message">{formErrors.patientNumber}</p>}
+            {formErrors.patientNumber && (
+              <p className="error-message">{formErrors.patientNumber}</p>
+            )}
           </label>
 
           <br />
@@ -119,7 +147,9 @@ function AppointmentForm() {
               <option value="female">Female</option>
               <option value="private">I will inform Doctor only</option>
             </select>
-            {formErrors.patientGender && <p className="error-message">{formErrors.patientGender}</p>}
+            {formErrors.patientGender && (
+              <p className="error-message">{formErrors.patientGender}</p>
+            )}
           </label>
 
           <br />
@@ -131,7 +161,9 @@ function AppointmentForm() {
               onChange={(e) => setAppointmentTime(e.target.value)}
               required
             />
-            {formErrors.appointmentTime && <p className="error-message">{formErrors.appointmentTime}</p>}
+            {formErrors.appointmentTime && (
+              <p className="error-message">{formErrors.appointmentTime}</p>
+            )}
           </label>
 
           <br />
@@ -146,7 +178,9 @@ function AppointmentForm() {
               <option value="voice">Voice Call</option>
               <option value="video">Video Call</option>
             </select>
-            {formErrors.preferredMode && <p className="error-message">{formErrors.preferredMode}</p>}
+            {formErrors.preferredMode && (
+              <p className="error-message">{formErrors.preferredMode}</p>
+            )}
           </label>
 
           <br />
@@ -154,7 +188,13 @@ function AppointmentForm() {
             Confirm Appointment
           </button>
 
-          <p className="success-message" style={{display: isSubmitted ? "block" : "none"}}>Appointment details has been sent to the patients phone number via SMS.</p>
+          <p
+            className="success-message"
+            style={{ display: isSubmitted ? 'block' : 'none' }}
+          >
+            Appointment details has been sent to the patients phone number via
+            SMS.
+          </p>
         </form>
       </div>
 
@@ -164,7 +204,7 @@ function AppointmentForm() {
 
       <ToastContainer autoClose={5000} limit={1} closeButton={false} />
     </div>
-  );
+  )
 }
 
-export default AppointmentForm;
+export default AppointmentForm

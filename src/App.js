@@ -7,6 +7,11 @@ import NotFound from './Pages/NotFound'
 import Appointment from './Pages/Appointment'
 
 function App() {
+  // Ponlos aquí mero, antes de que empiece la estructura visual:
+  console.log('🟢 [LOG]: Cargando el componente principal App.js')
+  console.info('ℹ️ [INFO]: Inicializando el enrutador de la aplicación...')
+  console.error('❌ [ERROR]: Esto es una simulación de error en la raíz.')
+
   return (
     <div className="App">
       <Router basename="">
